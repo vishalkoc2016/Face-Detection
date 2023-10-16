@@ -17,5 +17,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="150dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

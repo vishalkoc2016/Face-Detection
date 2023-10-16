@@ -57,14 +57,15 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener { faces ->
                 // Task completed successfully. our face is successfully detected
                 // ...
-                var resultText=" "
+                var resultText=""
                 var i=1
                 for(face in faces){
+                    i++
                     var resulText = "Face Number: $i" +
                           "\nSmile: ${face.smilingProbability?.times(100)}%"
                           "\nLeft Eye Open: ${face.leftEyeOpenProbability?.times(100)}%"+
                                   "\nRight Eye Open: ${face.rightEyeOpenProbability?.times(100)}%"
-                    i++
+
                 }
                 if(faces.isEmpty()){
                     Toast.makeText(this, "No Face is Detected", Toast.LENGTH_SHORT).show()
