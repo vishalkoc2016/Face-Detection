@@ -1,12 +1,15 @@
 package com.example.firstml
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         buttoncamera.setOnClickListener {
 
+            checkCameraPermission()
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
 
@@ -57,14 +61,15 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener { faces ->
                 // Task completed successfully. our face is successfully detected
                 // ...
-                var resultText=" "
+                var resultText=""
                 var i=1
                 for(face in faces){
+                    i++
                     var resulText = "Face Number: $i" +
                           "\nSmile: ${face.smilingProbability?.times(100)}%"
                           "\nLeft Eye Open: ${face.leftEyeOpenProbability?.times(100)}%"+
                                   "\nRight Eye Open: ${face.rightEyeOpenProbability?.times(100)}%"
-                    i++
+
                 }
                 if(faces.isEmpty()){
                     Toast.makeText(this, "No Face is Detected", Toast.LENGTH_SHORT).show()
@@ -81,4 +86,29 @@ class MainActivity : AppCompatActivity() {
 
             }
     }
+
+    fun checkCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 101)
+        }
+        else{
+
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == 101){
+            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d("PermissionGrant","Granted")
+            }else{
+                Toast.makeText(this, "Give your camera permission from settings", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }
